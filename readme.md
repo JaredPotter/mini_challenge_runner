@@ -8,7 +8,7 @@ How to setup a cron job:
 
 2. npm install
 
-3. Create cron job
+3. Create cron job on macOS/Linux:
     
     Run `crontab -e`
     This opens in vi. Simply push the `i` key to start "inserting". Once complete, hit `esc` key. Then `shift + :`, then `w`, `q` and enter. Should look like `:wq`. 
@@ -29,3 +29,7 @@ Learn more about cron jobs:
 https://ole.michelsen.dk/blog/schedule-jobs-with-crontab-on-mac-osx.html
 
 NOTE: First time running, you might get a popup modal from macOS asking to allow or deny network access. Click 'allow'.
+
+For Windows users, you can setup an AT Command:
+- https://ss64.com/nt/schtasks.html
+- https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-2000-server/bb726974(v=technet.10)
