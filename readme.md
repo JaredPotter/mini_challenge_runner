@@ -27,3 +27,5 @@ How to setup a cron job:
 
 Learn more about cron jobs:
 https://ole.michelsen.dk/blog/schedule-jobs-with-crontab-on-mac-osx.html
+
+NOTE: First time running, you might get a popup modal from macOS asking to allow or deny network access. Click 'allow'.
