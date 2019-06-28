@@ -1,13 +1,31 @@
+const functions = require('firebase-functions');
 const puppeteer = require('puppeteer');
 
-(async () => {
-    const username = process.argv[2];
-    const password = process.argv[3];
+// CREDENTIALS - DO NOT COMMIT TO PUBLIC REPO.
+const username = 'USERNAME';
+const password = 'PASSWORD';
+const assetHealthEmployer = 'EMPLOYER';
+
+console.log('Mini Challenge Function Deployed Successfully!');
+
+const runtimeOpts = {
+    timeoutSeconds: 300,
+    memory: '2GB'
+};
+
+exports.executeMiniChallengeRunner = functions.runWith(runtimeOpts).pubsub.schedule('0 9 * * *').onRun(async (context) => {
+    console.log('Executing Mini Challenge Runner!');
+
+    if(!username || !password) {
+        throw 'Username or Password not set';
+    }
+
     const browser = await puppeteer.launch({
-        headless: false
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
-    const pageUrl = 'https://www.assethealth.com/amadeuswellness';
+    const pageUrl = `https://www.assethealth.com/${assetHealthEmployer}`;
 
     await page.goto(pageUrl, {
         waitUntil: 'networkidle0' // 'networkidle0' is very useful for SPAs.
@@ -17,6 +35,7 @@ const puppeteer = require('puppeteer');
         return new Promise(resolve => setTimeout(resolve, ms));
     };    
 
+    // Set the username and password fields.
     await page.evaluate((username, password) => {
         const usernameField = document.querySelector('#login_un > input');
         usernameField.value = username;
@@ -26,13 +45,16 @@ const puppeteer = require('puppeteer');
 
     await sleep(1000);
 
+    // Click 'login' button.
     await page.evaluate(() => {
         const loginButton = document.querySelector('#login_submit > a');
+
         loginButton.click();
     });
 
     await sleep(5000);
 
+    // Click the daily challenge button.
     await page.evaluate(() => {
         const miniChallengeButton = document.querySelector('#home_widget_AHXDynamicLayout_renderWidget_miniChallengesTile_4 > div.tile-body > div > div > div > div.btn.btn-info.text-uppercase');
 
@@ -43,5 +65,6 @@ const puppeteer = require('puppeteer');
 
     await sleep(5000);
 
-  await browser.close();
-})();
+    // Close browser once complete.
+    await browser.close();
+});
